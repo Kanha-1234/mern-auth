@@ -104,3 +104,31 @@ export const login = async(req,res)=>{
         })
     }
 }
+
+export const logout = async(req,res)=>{
+    try {
+        
+        res.staus(200).cookie("token",{
+            httpOnly:true,
+            secure:process.env.NODE_ENV === "production",
+            sameSite:process.env.NODE_ENV == "production" ? "none":"strict",
+            maxAge:7*24*60*60*1000
+          })
+    
+          return res.json({
+            success:true,
+            message:"logged out"
+          })
+
+
+
+
+
+
+    } catch (error) {
+        return res.json({
+            success:false,
+            message:error.message
+        })
+    }
+}
