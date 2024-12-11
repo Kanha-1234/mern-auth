@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
-import userModel from "../models/user.model"
+import userModel from "../models/user.model.js"
 
 export const register = async(req,res)=>{
     const {name,email,password} = req.body
@@ -34,7 +34,7 @@ export const register = async(req,res)=>{
       const registerToken = jwt.sign({id:newuser._id},process.env.JWT_SEKRET,{expiresIn:'7d'})
         
 
-       res.staus(201).cookie("token",registerToken,{
+       res.status(201).cookie("token",registerToken,{
         httpOnly:true,
         secure:process.env.NODE_ENV === "production",
         sameSite:process.env.NODE_ENV == "production" ? "none":"strict",
@@ -67,7 +67,7 @@ export const login = async(req,res)=>{
 
     try {
 
-        const user = await undefined.findOne({email})
+        const user = await userModel.findOne({email})
         if(!user){
             return res.json({
                 success:false,
@@ -83,10 +83,10 @@ export const login = async(req,res)=>{
             })
         }
 
-        const loginToken = jwt.sign({id:newuser._id},process.env.JWT_SEKRET,{expiresIn:'7d'})
+        const loginToken = jwt.sign({id:user._id},process.env.JWT_SEKRET,{expiresIn:'7d'})
         
 
-       res.staus(201).cookie("token",loginToken,{
+       res.status(201).cookie("token",loginToken,{
         httpOnly:true,
         secure:process.env.NODE_ENV === "production",
         sameSite:process.env.NODE_ENV == "production" ? "none":"strict",
@@ -108,7 +108,7 @@ export const login = async(req,res)=>{
 export const logout = async(req,res)=>{
     try {
         
-        res.staus(200).cookie("token",{
+        res.status(200).cookie("token",{
             httpOnly:true,
             secure:process.env.NODE_ENV === "production",
             sameSite:process.env.NODE_ENV == "production" ? "none":"strict",
